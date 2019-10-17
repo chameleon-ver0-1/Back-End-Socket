@@ -5,7 +5,7 @@ io.sockets.on('connection', socket => {
 
     // connection 수신되면 Client에 connected 송신
     socket.emit('connection', {
-        color: (Math.round()*0xffffff).toString(16),
+        color: '#' + (Math.round()*0xffffff).toString(16),
         type : 'connected'
     });
 
