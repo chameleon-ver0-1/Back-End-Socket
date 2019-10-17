@@ -1,3 +1,4 @@
+var randomColor = require('randomcolor');
 const io = require('socket.io').listen(50000);
 io.set('origins', '*:*');
 
@@ -5,7 +6,7 @@ io.sockets.on('connection', socket => {
 
     // connection 수신되면 Client에 connected 송신
     socket.emit('connection', {
-        color: '#' + (Math.round()*0xffffff).toString(16),
+        color: randomColor(),
         type : 'connected'
     });
 
