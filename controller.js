@@ -2,7 +2,7 @@ var model = require('./models');
 
 exports.writeMessage = async (person, content) => {
     await model.Stt_log.log.create({
-        date: new Date.now(),
+        date: new Date(Date.now()),
         person: person,
         content: content
     }).then(result => {
