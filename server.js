@@ -1,6 +1,5 @@
 var randomColor = require('randomcolor');
-
-var model = require('./models');
+var controller = require('./controller');
 
 const io = require('socket.io').listen(50000);
 
@@ -39,6 +38,8 @@ io.sockets.on('connection', socket => {
 
         if (room) {
             // TODO: 로컬 DB에 데이터 쌓기
+            controller.writeMessage(data.name, data.message);
+            
             socket.broadcast.to(room).emit('message', data);
         }
     });

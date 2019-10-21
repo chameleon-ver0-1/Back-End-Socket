@@ -1,38 +1,38 @@
-rooms = (mongoose) => {
+room = (mongoose) => {
     const schema = new mongoose.Schema({
         roomId: String,
         participant: [String],
         startTime: Date,
         endTime: Date,
-        mainTopics: [{type: mongoose.Schema.Types.ObjectId, ref: 'topics'}]
+        mainTopics: [{type: mongoose.Schema.Types.ObjectId, ref: 'topic'}]
     });
 
-    return mongoose.model('rooms', schema);
+    return mongoose.model('room', schema);
 };
 
-topics = (mongoose) => {
+topic = (mongoose) => {
     const schema = new mongoose.Schema({
         topicName: String,
-        logs: [{type: mongoose.Schema.Types.ObjectId, ref: 'logs'}]
+        logs: [{type: mongoose.Schema.Types.ObjectId, ref: 'log'}]
     });
 
-    return mongoose.model('topics', schema);
+    return mongoose.model('topic', schema);
 };
 
-logs = (mongoose) => {
+log = (mongoose) => {
     const schema = new mongoose.Schema({
         time: Date,
         person: String,
         content: String
     });
 
-    return mongoose.model('logs', schema);
+    return mongoose.model('log', schema);
 };
 
 module.exports = (mongoose) => {
     return stt_log = {
-        rooms: rooms(mongoose),
-        topics: topics(mongoose),
-        logs: logs(mongoose)
+        room: room(mongoose),
+        topic: topic(mongoose),
+        log: log(mongoose)
     };
 }
