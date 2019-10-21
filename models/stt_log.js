@@ -24,6 +24,9 @@ log = (mongoose) => {
         time: Date,
         person: String,
         content: String
+    },
+    {
+      timestamps: true
     });
 
     return mongoose.model('log', schema);
