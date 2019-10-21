@@ -1,5 +1,9 @@
 var randomColor = require('randomcolor');
+
+var model = require('./models');
+
 const io = require('socket.io').listen(50000);
+
 io.set('origins', '*:*');
 
 io.sockets.on('connection', socket => {
