@@ -17,6 +17,7 @@ io.sockets.on('connection', socket => {
 
         // 새로 들어온 사용자면 해당 사용자에게는 welcome message와 color, 채팅방에는 해당 사용자 연결 메시지 송신
         if(data.type === 'join') {
+            console.log('join to room -*-*-> ' + data.room);
 
             socket.join(data.room);
             socket.room = data.room;
@@ -26,8 +27,17 @@ io.sockets.on('connection', socket => {
             });
 
             // TODO: 로컬 DB에 데이터 쌓기
-            socket.broadcast.to(data.room).emit('system', {
-                message : `${data.name} 님이 회의에 참여하셨습니다.`
+            name = 'system';
+            message = `${data.name} 님이 회의에 참여하셨습니다.`;
+
+            try {
+                controller.writeMessage(name, message);
+            } catch (err) {
+                console.log(err);
+            }
+            
+            socket.broadcast.to(data.room).emit(name, {
+                message : message
             });
         }
     });
@@ -48,6 +58,10 @@ io.sockets.on('connection', socket => {
             
             socket.broadcast.to(room).emit('message', data);
         }
+    });
+
+    socket.on('done', data => {
+
     });
 
 });
