@@ -36,9 +36,15 @@ io.sockets.on('connection', socket => {
     socket.on('user', data => {
         var room = socket.room;
 
+        console.log('room = ' + data.room + ', name = ' + data.name + ', message = ' + data.message);
+
         if (room) {
             // TODO: 로컬 DB에 데이터 쌓기
-            controller.writeMessage(data.name, data.message);
+            try {
+                controller.writeMessage(data.name, data.message);
+            } catch (err) {
+                console.log(err);
+            }
             
             socket.broadcast.to(room).emit('message', data);
         }
