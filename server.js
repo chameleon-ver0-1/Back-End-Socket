@@ -58,6 +58,7 @@ io.sockets.on('connection', socket => {
     socket.on('user', data => {
         var room = socket.room;
 
+        console.log('==== topic: ', data.topic, '====');
         console.log('room = ' + room + ', name = ' + data.name + ', message = ' + data.message);
 
         if (room) {
@@ -73,6 +74,7 @@ io.sockets.on('connection', socket => {
     });
 
     socket.on('topic', data => {
+        console.log("change topic!");
         socket.broadcast.to(room).emit('changeTopic', data);
     });
 
