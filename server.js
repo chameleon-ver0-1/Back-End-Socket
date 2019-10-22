@@ -85,7 +85,7 @@ io.sockets.on('connection', socket => {
         console.log('disconnect from room: ', socket.room);
         rooms_users[socket.room].pop();
 
-        if (rooms_users[room].length === 0) {
+        if (rooms_users[socket.room].length === 0) {
             controller.endLogging(socket.room);
         }
     });
