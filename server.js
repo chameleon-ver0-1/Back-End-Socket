@@ -50,7 +50,7 @@ io.sockets.on('connection', socket => {
 
             // log to DB
             try {
-                controller.writeMessage(name, message);
+                controller.writeMessage(room, name, message, 'system');
             } catch (err) {
                 console.log(err);
             }
@@ -69,7 +69,7 @@ io.sockets.on('connection', socket => {
 
             // log to DB
             try {
-                controller.writeMessage(data.name, data.message);
+                controller.writeMessage(room, data.name, data.message, data.topic);
             } catch (err) {
                 console.log(err);
             }
@@ -85,6 +85,7 @@ io.sockets.on('connection', socket => {
         console.log('disconnect from room: ', socket.room);
         rooms_users[socket.room].pop();
 
+        // if nobody remain
         if (rooms_users[socket.room].length === 0) {
             controller.endLogging(socket.room);
         }

@@ -40,8 +40,7 @@ exports.writeMessage = async (roomId, person, content, topic) => {
 
 exports.createRoom = async (roomId) => {
     await model.Stt_log.room.create({
-        roomId: roomId,
-        topics: []
+        roomId: roomId
     }).then(result => {
         if (result) {
             return true
@@ -57,7 +56,7 @@ exports.endLogging = async (roomId) => {
     var OPTIONS = {
         headers: {'Content-Type': 'application/json'},
         json: true,
-        url: 'https://s.chameleon4switch.cf/flask/test',
+        url: 'https://s.chameleon4switch.cf/flask/summary',
         body: {roomId: roomId}
     };
 
