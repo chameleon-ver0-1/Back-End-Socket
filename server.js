@@ -26,11 +26,14 @@ io.sockets.on('connection', socket => {
             socket.room = room;
 
             if (!rooms_users[room]) {
-                rooms_users[room] = [];
+                rooms_users[room] = ['member'];
                 controller.createRoom(room);
+            } else {
+                // push defatut str value (to count)
+                rooms_users[room].push('member');
             }
 
-            rooms_users[room].push(socket.id);
+            console.log('in this room, ', rooms_users[room].length, ' people here.');
 
             // notice to me
             socket.emit('system', {
@@ -79,9 +82,10 @@ io.sockets.on('connection', socket => {
     });
 
     socket.on('disconnect', data => {
-        rooms_users[socket.room].pop(socket.id);
+        console.log('disconnect from room: ', socket.room);
+        rooms_users[socket.room].pop();
 
-        if (!rooms_users[room]) {
+        if (rooms_users[room].length === 0) {
             controller.endLogging(socket.room);
         }
     });
