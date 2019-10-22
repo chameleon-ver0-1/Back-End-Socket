@@ -25,9 +25,11 @@ exports.writeMessage = async (roomId, person, content, topic) => {
             { $push: { logs : logId }}
         ).then(result => {
             if (result){
+                console.log(result);
                 return true;
             }
 
+            console.log('Error!');
             return false;
         });
 
@@ -63,7 +65,7 @@ exports.endLogging = async (roomId) => {
     request.post(OPTIONS, (err, res, result) => {
         if (err) {
             // console.log('Error occured during endLogging');
-            console.log('Error occured during Testing');
+            console.log('Error occured during Testing: ', err);
         }
 
         console.log('====By TextRank====');
