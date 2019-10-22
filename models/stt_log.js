@@ -13,7 +13,6 @@ room = (mongoose) => {
 
 log = (mongoose) => {
     const schema = new mongoose.Schema({
-        time: Date,
         person: String,
         content: String,
         topic: String,
