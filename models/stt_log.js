@@ -1,29 +1,23 @@
 room = (mongoose) => {
     const schema = new mongoose.Schema({
         roomId: String,
-        participant: [String],
-        startTime: Date,
-        endTime: Date,
-        mainTopics: [{type: mongoose.Schema.Types.ObjectId, ref: 'topic'}]
+        topics: [String],
+        logs: [{type: mongoose.Schema.Types.ObjectId, ref: 'log'}]
+    },
+    {
+      timestamps: true
     });
 
     return mongoose.model('room', schema);
-};
-
-topic = (mongoose) => {
-    const schema = new mongoose.Schema({
-        topicName: String,
-        logs: [{type: mongoose.Schema.Types.ObjectId, ref: 'log'}]
-    });
-
-    return mongoose.model('topic', schema);
 };
 
 log = (mongoose) => {
     const schema = new mongoose.Schema({
         time: Date,
         person: String,
-        content: String
+        content: String,
+        topic: String,
+        roomId: String
     },
     {
       timestamps: true
@@ -35,7 +29,6 @@ log = (mongoose) => {
 module.exports = (mongoose) => {
     return stt_log = {
         room: room(mongoose),
-        topic: topic(mongoose),
         log: log(mongoose)
     };
 }
