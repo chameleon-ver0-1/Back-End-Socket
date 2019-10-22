@@ -56,6 +56,7 @@ exports.endLogging = async (roomId) => {
 
     var OPTIONS = {
         headers: {'Content-Type': 'application/json'},
+        json: true,
         url: 'https://s.chameleon4switch.cf/flask/test',
         body: {roomId: roomId}
     };
