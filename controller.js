@@ -1,31 +1,73 @@
 var model = require('./models');
-var mongoXlsx = require('mongo-xlsx')
-var fs = require('fs');
+var request = require('request');
 
-exports.writeMessage = async (person, content) => {
-    await model.Stt_log.log.create({
-        date: new Date(Date.now()),
-        person: person,
-        content: content
+exports.writeMessage = async (roomId, person, content, topic) => {
+    try {
+        var logId;
+
+        // insert log
+        await model.Stt_log.log.create({
+            person: person,
+            content: content,
+            topic: topic,
+            roomId: roomId
+        }).then(result => {
+            if (result){
+                logId = result._id;
+            }
+
+            return false;
+        });
+
+        // insert into room
+        await model.Stt_log.room.findOneAndUpdate(
+            { roomId: roomId },
+            { $push: { logs : logId }}
+        ).then(result => {
+            if (result){
+                return true;
+            }
+
+            return false;
+        });
+
+    } catch (err) {
+        console.log('Internal Server Error');
+
+        return false;
+    }
+};
+
+exports.createRoom = async (roomId) => {
+    await model.Stt_log.room.create({
+        roomId: roomId,
+        topics: []
     }).then(result => {
-        if (result){
+        if (result) {
             return true
         }
 
         return false
-    }).catch(err => {
-        console.log(err);
-        return false
     });
-};
+}
 
-// FIXME: roomId 받아야 함
-exports.exportFile = async () => {
-    await model.Stt_log.log.find().sort('createdAt').then(data => {
-        let model = mongoXlsx.buildDynamicModel(data);
+exports.endLogging = async (roomId) => {
+    console.log('here is roomId for summary => '+roomId);
 
-        mongoXlsx.mongoData2Xlsx(data, model, function(err, data) {
-            console.log('File saved at:', data.fullPath); 
-        });
+    var OPTIONS = {
+        headers: {'Content-Type': 'application/json'},
+        url: 'https://s.chameleon4switch.cf/flask/test',
+        body: {roomId: roomId}
+    };
+
+    request.post(OPTIONS, (err, res, result) => {
+        if (err) {
+            // console.log('Error occured during endLogging');
+            console.log('Error occured during Testing');
+        }
+
+        console.log('====By TextRank====');
+        console.log(res);
+        console.log(result);
     });
 };

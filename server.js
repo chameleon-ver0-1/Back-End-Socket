@@ -1,6 +1,8 @@
 var randomColor = require('randomcolor');
 var controller = require('./controller');
 
+var rooms_users = {};
+
 const io = require('socket.io').listen(50000);
 
 io.set('origins', '*:*');
@@ -17,28 +19,38 @@ io.sockets.on('connection', socket => {
 
         // 새로 들어온 사용자면 해당 사용자에게는 welcome message와 color, 채팅방에는 해당 사용자 연결 메시지 송신
         if(data.type === 'join') {
-            console.log('join to room -*-*-> ' + data.room);
+            const room = data.room;
+            console.log('join to room -*-*-> ' + room);
 
-            socket.join(data.room);
-            socket.room = data.room;
+            socket.join(room);
+            socket.room = room;
 
+            if (!rooms_users[room]) {
+                rooms_users[room] = [];
+                controller.createRoom(room);
+            }
+
+            rooms_users[room].push(socket.id);
+
+            // notice to me
             socket.emit('system', {
                 message: '회의실에 입장하셨습니다.'
             });
 
-            // TODO: 로컬 DB에 데이터 쌓기
+            // notice to others
             name = 'system';
             message = `${data.name} 님이 회의에 참여하셨습니다.`;
 
+            socket.broadcast.to(room).emit(name, {
+                message : message
+            });
+
+            // log to DB
             try {
                 controller.writeMessage(name, message);
             } catch (err) {
                 console.log(err);
             }
-            
-            socket.broadcast.to(data.room).emit(name, {
-                message : message
-            });
         }
     });
 
@@ -46,22 +58,29 @@ io.sockets.on('connection', socket => {
     socket.on('user', data => {
         var room = socket.room;
 
-        console.log('room = ' + data.room + ', name = ' + data.name + ', message = ' + data.message);
+        console.log('room = ' + room + ', name = ' + data.name + ', message = ' + data.message);
 
         if (room) {
-            // TODO: 로컬 DB에 데이터 쌓기
+            socket.broadcast.to(room).emit('message', data);
+
+            // log to DB
             try {
                 controller.writeMessage(data.name, data.message);
             } catch (err) {
                 console.log(err);
             }
-            
-            socket.broadcast.to(room).emit('message', data);
         }
     });
 
-    socket.on('done', data => {
-
+    socket.on('topic', data => {
+        socket.broadcast.to(room).emit('changeTopic', data);
     });
 
+    socket.on('disconnect', data => {
+        rooms_users[socket.room].pop(socket.id);
+
+        if (!rooms_users[room]) {
+            controller.endLogging(socket.room);
+        }
+    });
 });
