@@ -25,7 +25,7 @@ exports.writeMessage = async (roomId, person, content, topic) => {
             { $push: { logs : logId }}
         ).then(result => {
             if (result){
-                console.log(result);
+                console.log('DB: Successfully Logged, ObjectId = ' + logId);
                 return true;
             }
 
