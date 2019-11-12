@@ -64,12 +64,30 @@ exports.endLogging = async (roomId) => {
 
     request.post(OPTIONS, (err, res, result) => {
         if (err) {
-            // console.log('Error occured during endLogging');
-            console.log('Error occured during Testing: ', err);
+            console.log('Error occured during endLogging:', err);
         }
 
         console.log('====By TextRank====');
-        console.log(res);
-        console.log(result);
+        console.log(res.statusCode);
+
+        var data = JSON.parse(result.data);
+        console.log(data);
+
+        var OPTIONS_SUMMARY = {
+            headers: {'Content-Type': 'application/json'},
+            json: true,
+            url: 'https://a.chameleon4switch.cf/api/conf_log/create/' + roomId,
+            body: data
+        };
+
+        request.post(OPTIONS, (err, res, result) => {
+            if (err) {
+                console.log('Error occured during log to API DB: ', err);
+            }
+
+            console.log(result);
+        });
+        
+        
     });
 };
