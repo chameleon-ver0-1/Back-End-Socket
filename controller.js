@@ -80,11 +80,12 @@ exports.endLogging = async (roomId) => {
             body: data
         };
 
-        request.post(OPTIONS, (err, res, result) => {
+        request.post(OPTIONS_SUMMARY, (err, res, result) => {
             if (err) {
                 console.log('Error occured during log to API DB: ', err);
             }
 
+            console.log(res.statusCode);
             console.log(result);
         });
         
