@@ -68,7 +68,7 @@ exports.endLogging = async (roomId) => {
         }
 
         console.log('====By TextRank====');
-        console.log(res.statusCode);
+        console.log(res.status);
 
         var data = JSON.parse(result.data);
         console.log(data);
