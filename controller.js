@@ -85,10 +85,8 @@ exports.endLogging = async (roomId) => {
                 console.log('Error occured during log to API DB: ', err);
             }
 
-            console.log(res.statusCode);
+            console.log(res.status);
             console.log(result);
         });
-        
-        
     });
 };
