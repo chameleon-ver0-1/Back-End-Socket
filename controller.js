@@ -68,7 +68,6 @@ exports.endLogging = async (roomId) => {
         }
 
         console.log('====By TextRank====');
-        console.log(res.status);
 
         var data = JSON.parse(result.data);
         console.log(data);
@@ -84,8 +83,6 @@ exports.endLogging = async (roomId) => {
             if (err) {
                 console.log('Error occured during log to API DB: ', err);
             }
-
-            console.log(res.status);
             console.log(result);
         });
     });
